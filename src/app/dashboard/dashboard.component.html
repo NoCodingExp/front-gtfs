@@ -1,0 +1,107 @@
+<div class="main-content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header card-header-danger">
+                        <h4 class="card-title">Edit Profile</h4>
+                        <p class="card-category">Complete your profile</p>
+                    </div>
+                    <div class="card-body">
+                        <form>
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <mat-form-field class="example-full-width">
+                                        <mat-select [(ngModel)]="selecteddeparture" name="selecteddeparture" placeholder="Choose Departure Station">
+                                          <mat-option *ngFor="let departure of departures"  [value]="departure.stop_id">
+                                            {{ departure.stop_name }}
+                                          </mat-option>
+                                        </mat-select>
+                                      </mat-form-field>
+                                </div>
+                                <div class="col-md-4">
+                                    <mat-form-field class="example-full-width">
+                                        <mat-select [(ngModel)]="selectedarrival" name="selectedarrival" placeholder="Choose Arrival Station">
+                                            <mat-option *ngFor="let arrival of arrivals" [value]="arrival.stop_id">
+                                              {{ arrival.stop_name }}
+                                            </mat-option>
+                                          </mat-select>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-md-4">
+                                    <mat-form-field class="example-full-width">
+                                      <input matInput placeholder="Email address" type="date">
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                            <button mat-raised-button type="submit" class="btn btn-danger pull-right" (click)="send()">Search Trips</button>
+                            <div class="clearfix"></div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12" *ngIf="(NoAvailableTrains)">
+            <div class="alert alert-warning">
+                    <button mat-button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <i class="material-icons">close</i>
+                    </button>
+                    <span>
+                        <b> Warning - </b> This is a regular notification made with ".alert-warning"</span>
+                </div>
+            </div>
+            <div class="col-md-12" *ngIf="clicked">
+                <div class="card">
+                    <div class="card-header card-header-danger">
+                        <h4 class="card-title ">Simple Table</h4>
+                        <p class="card-category"> Here is a subtitle for this table</p>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead class=" text-primary">
+                                    <th>
+                                       Voyage
+                                    </th>
+                                    <th>
+                                        Heure Depart
+                                    </th>
+                                    <th>
+                                        Heure Arrivée
+                                    </th>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let item of Timetable">
+                                        <td>
+                                            {{ item.trip_id }}
+                                        </td>
+                                        <td>
+                                            {{ item.departure_time}}
+                                        </td>
+                                        <td>
+                                           {{ item.arrival_time }}
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-12">
+                    <div class="card">
+                                    <div class="card-header card-header-success">
+                                        <h4 class="card-title ">Simple Table</h4>
+                                        <p class="card-category"> Here is a subtitle for this table</p>
+                                    </div>
+                            <div class="card-body">
+                     <div id="map"></div>
+                </div>
+                
+                </div>
+            </div>
+
+        </div>
+    </div>
+  </div>
+  
