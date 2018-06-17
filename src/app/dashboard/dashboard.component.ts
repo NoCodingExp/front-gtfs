@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClientModule,HttpParams,HttpClient} from '@angular/common/http';
+import { AuthService } from '../auth/auth.service';
 
 declare const google: any;
 
@@ -19,9 +20,24 @@ draggable?: boolean;
 })
 export class DashboardComponent implements OnInit {
 
-  
-  userLat;
-  userLong;
+  private geoJsonObject;
+  private userLat: Number;
+  private userLong: Number;
+    public set_userLat(value: Number) {
+        this.userLat = value;
+    }
+    public set_userLong(value: Number){
+        this.userLong=value;
+    }
+
+
+    DestinationLat;
+    DestinationLng;
+    dir=null;
+
+
+
+  today;
 
   departures:Array<any>=[];
   arrivals:Array<any>=[];
@@ -32,10 +48,21 @@ export class DashboardComponent implements OnInit {
   NoAvailabetrains=false;
   private selecteddeparture=null;
   private selectedarrival=null;
-  
+  private clickedMarkerLat=null;
+  private clickedMarkerLong=null;
 
-  constructor(private http:HttpClient) { 
-    
+  constructor(private http:HttpClient, private auth:AuthService) { 
+    var date = new Date();
+    auth.handleAuthentication();
+
+    var day:any = date.getDate();
+    var month:any = date.getMonth() + 1;
+    var year = date.getFullYear();
+
+    if (month < 10) month = "0" + month;
+    if (day < 10) day = "0" + day;
+
+    this.today = year + "-" + month + "-" + day;
   }
 
 
@@ -63,9 +90,13 @@ export class DashboardComponent implements OnInit {
     this.Timetable=response
     )
   }
+
+
+  
  
   ngOnInit() {
-    this.getUserLocation()
+   
+  
 
 
 
@@ -73,13 +104,31 @@ export class DashboardComponent implements OnInit {
 
     
 this.getData();
-   
 
-    
-    var myLatlng = new google.maps.LatLng(36.43696902, 10.676975);
-    var mapOptions = {
+if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(position => {
+        
+        var pos = {
+            lat: position.coords.latitude,
+            lng: position.coords.longitude
+        };
+       /*  infoWindow.setPosition(pos);
+        map.setCenter(pos);
+        
+        map.data.loadGeoJson('http://localhost:5000/api/stops/nearby/'+this.userLat+'/'+this.userLong)
+        console.log('http://localhost:5000/api/stops/nearby/'+this.userLat+'/'+this.userLong)
+        console.log(this.userLat) */
+        this.userLat=pos.lat;
+        this.userLong=pos.lng;
+        this.http.get('http://localhost:5000/api/stops/nearby/'+this.userLat+'/'+this.userLong).subscribe(data=>
+    {
+        this.geoJsonObject=data
+    })
+    });
+}
+   
+    /* var mapOptions = {
         zoom: 13,
-        center: myLatlng,
         scrollwheel: false, //we disable de scroll over the map, it is a really annoing when you scroll through page
         styles: [{
             "featureType": "water",
@@ -168,37 +217,38 @@ this.getData();
         }]
 
     };
-
-
+ */
     
-    var map = new google.maps.Map(document.getElementById("map"), mapOptions);
+    
+    /* var map = new google.maps.Map(document.getElementById("map"), mapOptions);
+    var infoWindow = new google.maps.InfoWindow({map: map,
+    content:'You are here'});
 
-    var marker = new google.maps.Marker({
-        position: myLatlng,
-        title: "Hello World!"
+    google.maps.event.addListener(map, "click", function (event) {
+        this.clickedMarkerLat = event.latLng.lat();
+        this.clickedMarkerLong = event.latLng.lng();
+        
     });
-    console.log(myLatlng)
-    map.data.loadGeoJson('http://localhost:5000/api/stops/nearby/36.43696902/10.676975')
-    // To add the marker to the map, call setMap();
-    marker.setMap(map);
+
+    var directionsDisplay;
+    var directionsService = new google.maps.DirectionsService();
+     */
+    
     }
 
+   clickedLayer($event) {
+    this.DestinationLat=$event.latLng.lat()
+    this.DestinationLng=$event.latLng.lng()
+    this.getDirection(this.userLat,this.userLong,this.DestinationLat,this.DestinationLng)
+   }
+   public getDirection(originLat,originLng,destinationLat,destinationLng) {
+    this.dir = {
+      origin: { lat: originLat, lng: originLng },
+      destination: { lat: destinationLat, lng: destinationLng },
+      travelMode:'WALKING'
+    }}
 
-
-  private getUserLocation() {
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(position => {
-          this.userLat = position.coords.latitude;
-          this.userLong = position.coords.longitude;
-          console.log(position);
-        });
-  
-  
-      }
-      else console.log('GPS disabled')
-    }
-  
-  send() {
+    send() {
     this.getDepartures();
     if (this.Timetable.length>0)
     this.clicked = true;

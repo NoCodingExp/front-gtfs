@@ -2,14 +2,23 @@ import { NgModule } from '@angular/core';
 import { CommonModule, } from '@angular/common';
 import { BrowserModule  } from '@angular/platform-browser';
 import { Routes, RouterModule } from '@angular/router';
-
 import { AdminLayoutComponent } from './layouts/admin-layout/admin-layout.component';
+import { LoginComponent } from './login/login.component';
+import { notGuardAuthentificationService } from './auth/notauth-Guard';
+import { GuardAuthentificationService } from './auth/auth-Guard';
 
 const routes: Routes =[
   {
     path: '',
+    component: LoginComponent,
+    pathMatch: 'full',
+    canActivate: [notGuardAuthentificationService]
+  },
+   {
+    path: 'dashboard',
     redirectTo: 'dashboard',
     pathMatch: 'full',
+    canActivate: [GuardAuthentificationService]
   }, {
     path: '',
     component: AdminLayoutComponent,

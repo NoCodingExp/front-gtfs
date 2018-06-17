@@ -4,22 +4,22 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AdminLayoutRoutes } from './admin-layout.routing';
 import { DashboardComponent } from '../../dashboard/dashboard.component';
-import { UserProfileComponent } from '../../user-profile/user-profile.component';
 import { TableListComponent } from '../../table-list/table-list.component';
-import { TypographyComponent } from '../../typography/typography.component';
-import { IconsComponent } from '../../icons/icons.component';
-import { MapsComponent } from '../../maps/maps.component';
-import { NotificationsComponent } from '../../notifications/notifications.component';
-import { UpgradeComponent } from '../../upgrade/upgrade.component';
+
 import {MatSelectModule} from '@angular/material/select';
 import { HttpClientModule } from '@angular/common/http';
+import { AgmCoreModule } from '@agm/core';
+import { AgmDirectionModule } from 'agm-direction';
 
 import {
   MatButtonModule,
   MatInputModule,
   MatRippleModule,
-  MatTooltipModule,
+  MatTooltipModule
+
 } from '@angular/material';
+import { ScheduleComponent } from '../../schedule/schedule.component';
+import { RoutesComponent } from '../../routes/routes.component';
 @NgModule({
   imports: [
     CommonModule,
@@ -30,17 +30,18 @@ import {
     MatInputModule,
     MatTooltipModule,
     MatSelectModule,
-    HttpClientModule
+    HttpClientModule,
+    AgmCoreModule.forRoot({
+      apiKey: 'AIzaSyDx7dJTgxCGQIhKt6yw050J4bc-bUocTN8'
+    }),
+    AgmDirectionModule
   ],
   declarations: [
     DashboardComponent,
-    UserProfileComponent,
-    TableListComponent,
-    TypographyComponent,
-    IconsComponent,
-    MapsComponent,
-    NotificationsComponent,
-    UpgradeComponent,
+ScheduleComponent,
+RoutesComponent
+   
+
   ]
 })
 

@@ -30,7 +30,7 @@
                                 </div>
                                 <div class="col-md-4">
                                     <mat-form-field class="example-full-width">
-                                      <input matInput placeholder="Email address" type="date">
+                                      <input matInput placeholder="Date" type="date" value="{{today}}">
                                     </mat-form-field>
                                 </div>
                             </div>
@@ -95,7 +95,13 @@
                                         <p class="card-category"> Here is a subtitle for this table</p>
                                     </div>
                             <div class="card-body">
-                     <div id="map"></div>
+                                <agm-map style="height: 300px;" [latitude]="userLat" [longitude]="userLong">
+                                    	  <agm-data-layer [geoJson]="geoJsonObject" (layerClick)="clickedLayer($event)" [style]="styleFunc">
+                                       </agm-data-layer>
+                                       <agm-direction  *ngIf="dir" [origin]="dir.origin" [destination]="dir.destination" [travelMode]="dir.travelMode" [waypoints]="dir.waypoints" [panel]="myPanel">
+
+                  </agm-direction>
+                                   </agm-map>
                 </div>
                 
                 </div>
